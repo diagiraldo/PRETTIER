@@ -4,6 +4,6 @@ __pycache__
 .ipynb_checkpoints
 
 # Fine-tuned weights not on git
-weights/*
+weights/*.pth
 # Example results not on git
 examples/prettier*.nii*
