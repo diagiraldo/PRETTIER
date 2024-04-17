@@ -2,5 +2,8 @@ __pycache__
 *.pyc
 *.pyo
 .ipynb_checkpoints
+
 # Fine-tuned weights not on git
 weights/*
+# Example results not on git
+examples/prettier*.nii*
