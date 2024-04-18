@@ -35,11 +35,13 @@ def main(args=None):
     parser.add_argument('--gpu-id', type=int, default=0)
     parser.add_argument('--batch-size', type=int, default=1)
     parser.add_argument('--no-flip-axes', action='store_true', default=False)
+    parser.add_argument('--quiet', action='store_true', default=False)
     
     args = parser.parse_args(args if args is not None else sys.argv[1:])
     model_name = args.model_name
+    print_info = not args.quiet
     
-    print('-------------------------------------------------')
+    if print_info: print('-------------------------------------------------')
     
     # Check inputs
     if not os.path.isfile(args.LR_input):
@@ -57,40 +59,42 @@ def main(args=None):
     weights_fpath = os.path.join(weights_dir, model_name + "_finetuned.pth")
     if not os.path.isfile(weights_fpath):
         #raise ValueError('File with weights not found in', weights_fpath)
-        print(f'Fine-tuned weights not found in {weights_fpath}, trying to download it...')
+        if print_info: print(f'Fine-tuned weights not found in {weights_fpath}, trying to download it...')
         import gdown
-        gdown.download(FT_WEIGHTS_URLS[model_name], weights_fpath)
+        gdown.download(FT_WEIGHTS_URLS[model_name], weights_fpath, quiet=args.quiet)
 
     else: 
-        print(f'Fine-tuned weights found in {weights_fpath}')
+        if print_info: print(f'Fine-tuned weights found in {weights_fpath}')
         
     # Detect device/GPU
     device = torch.device(f'cuda:{args.gpu_id}' if torch.cuda.is_available() else 'cpu')
-    print("Device:", device)
+    if print_info: print("Device:", device)
     
-    print('-------------------------------------------------')
+    if print_info: print('-------------------------------------------------')
         
     # Read input image
     LR = nib.load(args.LR_input)
     
-    print("LR image:", args.LR_input)
-    print('Image array shape:', LR.header['dim'][1:4])
-    print('Voxel size:', LR.header['pixdim'][1:4])
-    print('Orientation of voxel axes:', nib.aff2axcodes(LR.affine))
+    if print_info: 
+        print("LR image:", args.LR_input)
+        print('Image array shape:', LR.header['dim'][1:4])
+        print('Voxel size:', LR.header['pixdim'][1:4])
+        print('Orientation of voxel axes:', nib.aff2axcodes(LR.affine))
     
     original_ori = nib.io_orientation(LR.affine)
     flip_axes = (np.min(original_ori[:,1]) < 0) and not args.no_flip_axes
     
     if flip_axes:
-        print("Flipping axes of LR input")
-        reorient = original_ori
-        reorient[:,0] = [0,1,2]
-        print(reorient)
-        LR = LR.as_reoriented(reorient)
-        print('New orientation of voxel axes:', nib.aff2axcodes(LR.affine))
-        
-    print('-------------------------------------------------')
-    print(f'Loading fine-tuned {model_name} model')
+        if print_info: print("Flipping axes of LR input")
+        flipping = original_ori
+        flipping[:,0] = [0,1,2]
+        if print_info: print(flipping)
+        LR = LR.as_reoriented(flipping)
+        if print_info: print('New orientation of voxel axes:', nib.aff2axcodes(LR.affine))
+
+    if print_info:     
+        print('-------------------------------------------------')
+        print(f'Loading fine-tuned {model_name} model')
     
     # Get model
     if model_name == "EDSR":
@@ -122,21 +126,22 @@ def main(args=None):
         select_middle = False,
         return_vol_list = False,
         combine_vol_method = COMBINE_VOL_METHOD,
+        print_info = print_info,
     )
     
     hr_nib = nib.Nifti1Image(rec, v2w)
     
     # Flip back axes
     if flip_axes:
-        print('Orientation of voxel axes:', nib.aff2axcodes(hr_nib.affine))
-        print("Flipping axes of HR output")
-        hr_nib = hr_nib.as_reoriented(reorient)
-        print('New orientation of voxel axes:', nib.aff2axcodes(hr_nib.affine))
+        #if print_info: print('Orientation of voxel axes:', nib.aff2axcodes(hr_nib.affine))
+        if print_info: print("Flipping axes of HR output")
+        hr_nib = hr_nib.as_reoriented(flipping)
+        #if print_info: print('New orientation of voxel axes:', nib.aff2axcodes(hr_nib.affine))
             
     # Save nifti image
     nib.save(hr_nib, args.output) 
     
-    print("Reconstructed image saved in", args.output)
+    if print_info: print("Reconstructed image saved in", args.output)
 
 if __name__ == '__main__':
     main()
