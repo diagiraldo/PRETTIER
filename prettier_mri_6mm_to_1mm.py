@@ -10,12 +10,9 @@ import torch
 import numpy as np
 import nibabel as nib
 
-from basicsr.archs.rrdbnet_arch import RRDBNet
-
 repo_dir = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, repo_dir)
 
-from prettier.models.edsr import EDSR
 from prettier.srr_mri import reconstruct_volume
 
 COMBINE_VOL_METHOD = "average"
@@ -52,6 +49,7 @@ def main(args=None):
     if not os.path.isdir(weights_dir):
         raise RuntimeError(f'Weights directory not found in {weights_dir}')
     
+    # Check existence of fine-tuned weights, try to download it 
     weights_fpath = os.path.join(weights_dir, model_name + "_finetuned.pth")
     if not os.path.isfile(weights_fpath):
         raise ValueError('File with weights not found in', weights_fpath)
@@ -88,11 +86,13 @@ def main(args=None):
     
     # Get model
     if model_name == "EDSR":
+        from prettier.models.edsr import EDSR
         model = EDSR(n_colorchannels = 3, scale = 4)
         model.load_state_dict(torch.load(weights_fpath)['model_weights'])
         scale_factor = 255
         
     elif model_name == "RealESRGAN":
+        from basicsr.archs.rrdbnet_arch import RRDBNet
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
         model.load_state_dict(torch.load(weights_fpath)['generator_weights'])
         scale_factor = None

@@ -9,8 +9,9 @@ import cv2
 
 from .utils.reconstruction import combine_volumes, pad_rgb_channels, combine_channels
 from .utils.image_slices import ImageSlices
-
 from .apply_models import apply_model_dataset
+
+DEFAULT_NUM_WORKERS = 2
 
 
 # Function to upsample slices of a volume
@@ -24,7 +25,7 @@ def upsample_slices(in_nib_img,
                     slices_as_channels = True,
                     select_middle = True,
                     print_info = True,
-                    num_workers = 2,
+                    num_workers = DEFAULT_NUM_WORKERS,
                    ):
     
     # Create Dataset with LR slices

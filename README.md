@@ -6,9 +6,12 @@ This repository contains ...
 
 ## Requirements
 
-- Pytorch
-- nibabel
-- BasicSR 
+This code depends on:
+- [NiBabel](https://nipy.org/nibabel/) 
+- [PyTorch](https://pytorch.org/), this tool has been developed and tested with [PyTorch 2.1.1](https://pytorch.org/get-started/previous-versions/#v211) and CUDA 11.8
+- [BasicSR](https://github.com/XPixelGroup/BasicSR) is needed to import the generator architecture ([RRDBNet](https://basicsr.readthedocs.io/en/latest/api/basicsr.archs.rrdbnet_arch.html#basicsr.archs.rrdbnet_arch.RRDBNet)) of the RealESRGAN.
+
+See full list in [`requirements.txt`](requirements.txt)
 
 ## Fine-tuned Models
 
@@ -34,5 +37,5 @@ Not yet.
 
 ## Contact
 
-Diana L. Giraldo Franco
+Diana L. Giraldo Franco [@diagiraldo](https://github.com/diagiraldo)
 

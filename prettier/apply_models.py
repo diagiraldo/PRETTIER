@@ -1,11 +1,9 @@
 # Diana Giraldo
 # May, 2023
 
-import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from torchvision.transforms.functional import resize
-import cv2
 from tqdm import tqdm
 
 def apply_model_dataset(
