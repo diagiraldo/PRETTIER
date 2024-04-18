@@ -16,6 +16,10 @@ sys.path.insert(0, repo_dir)
 from prettier.srr_mri import reconstruct_volume
 
 COMBINE_VOL_METHOD = "average"
+FT_WEIGHTS_URLS = {
+    'RealESRGAN': "https://drive.google.com/uc?export=download&id=15xWVa7C4IISiMlXIdee2yjjZne2dufJh",
+    'EDSR': "https://drive.google.com/uc?export=download&id=13E-EKIdHW6QyrZiLE8WvvDcJ1vnP9RgS",
+}
 
 # -----------------------------------------
 # --- Perform SRR with fine-tuned models ---
@@ -52,7 +56,11 @@ def main(args=None):
     # Check existence of fine-tuned weights, try to download it 
     weights_fpath = os.path.join(weights_dir, model_name + "_finetuned.pth")
     if not os.path.isfile(weights_fpath):
-        raise ValueError('File with weights not found in', weights_fpath)
+        #raise ValueError('File with weights not found in', weights_fpath)
+        print(f'Fine-tuned weights not found in {weights_fpath}, trying to download it...')
+        import gdown
+        gdown.download(FT_WEIGHTS_URLS[model_name], weights_fpath)
+
     else: 
         print(f'Fine-tuned weights found in {weights_fpath}')
         
@@ -103,7 +111,7 @@ def main(args=None):
     model.eval()
     model = model.to(device)
     
-    # Recosntruct volume
+    # Reconstruct volume
     rec, v2w = reconstruct_volume(
         LR, 
         model, 

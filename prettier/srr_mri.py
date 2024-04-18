@@ -4,7 +4,6 @@
 
 from time import time
 import numpy as np
-import nibabel as nib
 import cv2
 
 from .utils.reconstruction import combine_volumes, pad_rgb_channels, combine_channels
@@ -15,18 +14,19 @@ DEFAULT_NUM_WORKERS = 2
 
 
 # Function to upsample slices of a volume
-def upsample_slices(in_nib_img, 
-                    slicing_dim, 
-                    out_shape,
-                    upsample_model,
-                    device,
-                    batch_size = 10,
-                    scale_factor = None,
-                    slices_as_channels = True,
-                    select_middle = True,
-                    print_info = True,
-                    num_workers = DEFAULT_NUM_WORKERS,
-                   ):
+def upsample_slices(
+    in_nib_img, 
+    slicing_dim, 
+    out_shape,
+    upsample_model,
+    device,
+    batch_size = 10,
+    scale_factor = None,
+    slices_as_channels = True,
+    select_middle = True,
+    print_info = True,
+    num_workers = DEFAULT_NUM_WORKERS,
+):
     
     # Create Dataset with LR slices
     lr_slices = ImageSlices(
@@ -140,7 +140,12 @@ def reconstruct_volume(
             print("-------------------------------------------")
             print("Combining volumes")
             
-        HR_data = combine_volumes(rec_list, method = combine_vol_method, fba_p = None, fba_sigma = None)  
+        HR_data = combine_volumes(
+            rec_list, 
+            method = combine_vol_method, 
+            fba_p = fba_p, 
+            fba_sigma = fba_sigma,
+        )  
         
         t1 = time()
         if print_info: print("Total reconstruction time:", t1 - t0)

@@ -1,8 +1,10 @@
 # PRETTIER
 
-This repository contains ...
-
 <img src="figures/example_simulatedLR.png?raw=True" width="800px" style="margin:0px 0px"/>
+
+<p> This repository contains ...</p>
+
+
 
 ## Requirements
 
