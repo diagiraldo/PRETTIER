@@ -2,10 +2,7 @@
 
 This repository contains ...
 
-## Summary
-
-Description, add example figure
-<img src="figures/example_simulatedLR_FLAIR.png?raw=True" width="800px" style="margin:0px 0px"/>
+<img src="figures/example_simulatedLR.png?raw=True" width="800px" style="margin:0px 0px"/>
 
 ## Requirements
 
