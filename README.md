@@ -11,7 +11,7 @@
 This code depends on:
 - [NiBabel](https://nipy.org/nibabel/) 
 - [PyTorch](https://pytorch.org/), this tool has been developed and tested with [PyTorch 2.1.1](https://pytorch.org/get-started/previous-versions/#v211) and CUDA 11.8
-- [BasicSR](https://github.com/XPixelGroup/BasicSR) is needed to import the generator architecture ([RRDBNet](https://basicsr.readthedocs.io/en/latest/api/basicsr.archs.rrdbnet_arch.html#basicsr.archs.rrdbnet_arch.RRDBNet)) of the RealESRGAN.
+- [BasicSR](https://github.com/XPixelGroup/BasicSR) is needed to import the generator architecture ([RRDBNet](https://basicsr.readthedocs.io/en/latest/api/basicsr.archs.rrdbnet_arch.html#basicsr.archs.rrdbnet_arch.RRDBNet)) of RealESRGAN.
 
 See full list in [`requirements.txt`](requirements.txt)
 
@@ -30,7 +30,7 @@ See full list in [`requirements.txt`](requirements.txt)
 
 Example:
 ```
-./prettier_mri_6mm_to_1mm.py --LR-input example/synth_LR_T1.nii.gz --model-name EDSR --output example/prettier_edsr_synth_T1.nii.gz
+./prettier_mri_6mm_to_1mm.py --LR-input demo_data/synth_LR_T1.nii.gz --model-name EDSR --output demo_data/prettier_edsr_synth_T1.nii.gz
 ```
 
 ## Citations
