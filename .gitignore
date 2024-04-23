@@ -6,4 +6,4 @@ __pycache__
 # Fine-tuned weights not on git
 weights/*.pth
 # Example results not on git
-examples/prettier*.nii*
+demo_data/prettier*.nii*
