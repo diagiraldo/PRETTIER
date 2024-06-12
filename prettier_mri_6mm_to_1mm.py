@@ -47,8 +47,8 @@ def main(args=None):
     if not os.path.isfile(args.LR_input):
         raise ValueError('Input image does not exist.')
         
-    if not os.path.isdir(os.path.dirname(args.output)):
-        raise ValueError('Output directory does not exist.')
+    # if not os.path.isdir(os.path.dirname(args.output)):
+    #     raise ValueError('Output directory does not exist.')
     
     # Check existence of weights directory
     weights_dir = os.path.join(repo_dir, "weights")
