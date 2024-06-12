@@ -1,10 +1,13 @@
 # PRETTIER
 
+This repository contains the script to apply PRETTIER, a framework to perform super-resolution on structural MRI. This framework relies on convolutional neural networks (CNN) that have been fine-tune with data from T2-W FLAIR and T1-W MRIs of people with Multiple Sclerosis.  
+We have developed and evaluated PRETTIER to increase the through-plane resolution of multi-slice MRI from 6mm to 1mm.
+
+At this moment (May 2024), there are two fine-tuned CNN models to work within PRETTIER: EDSR and RealESRGAN.
+
 <img src="figures/example_simulatedLR.png?raw=True" width="800px" style="margin:0px 0px"/>
 
-<p> This repository contains ...</p>
-
-
+The name **PRETTIER** comes from **P**erceptual super-**RE**solu**T**ion in mul**TI**ple scl**ER**osis. (You can say it is a rather convoluted explanation for a name, and I would agree. But you cannot say it isn't a pretty fitting name for a super-resolution method)
 
 ## Requirements
 
