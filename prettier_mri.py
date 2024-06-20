@@ -66,8 +66,14 @@ def main(args=None):
     else: 
         if print_info: print(f'Fine-tuned weights found in {weights_fpath}')
         
-    # Detect device/GPU
-    device = torch.device(f'cuda:{args.gpu_id}' if torch.cuda.is_available() else 'cpu')
+    # Detect device: GPU? MPS? -> CPU
+    if torch.cuda.is_available():
+        dev_str = 'cuda:{args.gpu_id}'
+    elif torch.backends.mps.is_available():
+        dev_str = 'mps'
+    else:
+        dev_str = 'cpu'
+    device = torch.device(dev_str)
     if print_info: print("Device:", device)
     
     if print_info: print('-------------------------------------------------')
@@ -100,13 +106,13 @@ def main(args=None):
     if model_name == "EDSR":
         from prettier.models.edsr import EDSR
         model = EDSR(n_colorchannels = 3, scale = 4)
-        model.load_state_dict(torch.load(weights_fpath)['model_weights'])
+        model.load_state_dict(torch.load(weights_fpath, map_location=device)['model_weights'])
         scale_factor = 255
         
     elif model_name == "RealESRGAN":
         from basicsr.archs.rrdbnet_arch import RRDBNet
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
-        model.load_state_dict(torch.load(weights_fpath)['generator_weights'])
+        model.load_state_dict(torch.load(weights_fpath, map_location=device)['generator_weights'])
         scale_factor = None
         
     else:

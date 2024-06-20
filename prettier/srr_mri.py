@@ -108,7 +108,7 @@ def reconstruct_volume(
         print("HR image array shape:", HR_shape)
     slicing_dims = np.delete(np.arange(3), LR_scaling.argmax()).tolist()
     
-    # Get HR(1mm) transform
+    # Get HR transform
     LR_v2w = LR_nib_img.affine.astype(np.float64)
     hr_R = LR_v2w[:3, :3] @ np.linalg.inv(np.diag(LR_scaling).astype(np.float64))
     hr_b = LR_v2w[:3, 3] - hr_R @ ((LR_scaling - 1) / 2.)
