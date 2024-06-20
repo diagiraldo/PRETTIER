@@ -68,7 +68,7 @@ def main(args=None):
         
     # Detect device: GPU? MPS? -> CPU
     if torch.cuda.is_available():
-        dev_str = 'cuda:{args.gpu_id}'
+        dev_str = f'cuda:{args.gpu_id}'
     elif torch.backends.mps.is_available():
         dev_str = 'mps'
     else:
