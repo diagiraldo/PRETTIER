@@ -28,12 +28,12 @@ See full list in [`requirements.txt`](requirements.txt)
 ## Usage
 
 ```
-./prettier_mri_6mm_to_1mm.py --LR-input <lr_input> --model-name {EDSR,RealESRGAN} --output <output_image> [--gpu-id GPU_ID] [--batch-size BATCH_SIZE] [--no-flip-axes]
+./prettier_mri.py --LR-input <lr_input> --model-name {EDSR,RealESRGAN} --output <output_image> [--gpu-id GPU_ID] [--batch-size BATCH_SIZE] [--no-flip-axes]
 ```
 
 Example:
 ```
-./prettier_mri_6mm_to_1mm.py --LR-input demo_data/synth_LR_T1.nii.gz --model-name EDSR --output demo_data/prettier_edsr_synth_T1.nii.gz
+./prettier_mri.py --LR-input demo_data/synth_LR_T1.nii.gz --model-name EDSR --output demo_data/prettier_edsr_synth_T1.nii.gz
 ```
 
 ## Citations
