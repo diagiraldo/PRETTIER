@@ -95,8 +95,17 @@ def reconstruct_volume(
     num_workers = 2,
 ):
     
-    LR_scaling = np.round(np.array(LR_nib_img.header.get_zooms()))
+    LR_voxelsize = np.array(LR_nib_img.header.get_zooms())
+    scaling_check = LR_voxelsize[2]/LR_voxelsize[0]
+    if scaling_check.is_integer():
+        LR_scaling = np.array([1, 1, scaling_check])
+    else:
+        LR_scaling = np.round(LR_voxel)
     HR_shape = (np.array(LR_nib_img.shape)*LR_scaling).astype(int)
+    if print_info:
+        print("-------------------------------------------")
+        print("Scaling factor:", LR_scaling)
+        print("HR image array shape:", HR_shape)
     slicing_dims = np.delete(np.arange(3), LR_scaling.argmax()).tolist()
     
     # Get HR(1mm) transform
