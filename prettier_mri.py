@@ -19,6 +19,7 @@ COMBINE_VOL_METHOD = "average"
 FT_WEIGHTS_URLS = {
     'RealESRGAN': "https://drive.google.com/uc?export=download&id=15xWVa7C4IISiMlXIdee2yjjZne2dufJh",
     'EDSR': "https://drive.google.com/uc?export=download&id=13E-EKIdHW6QyrZiLE8WvvDcJ1vnP9RgS",
+    'ShuffleMixer': "https://drive.google.com/uc?export=download&id=1sg2P2SNIW-efGflzYCHlWcRUuzjsSYTd"
 }
 
 # -----------------------------------------
@@ -30,7 +31,7 @@ def main(args=None):
     # Get inputs
     parser = argparse.ArgumentParser()
     parser.add_argument('--LR-input', type=str, required=True)
-    parser.add_argument('--model-name', type=str, choices=["EDSR", "RealESRGAN"], required=True)
+    parser.add_argument('--model-name', type=str, choices=["EDSR", "RealESRGAN", "ShuffleMixer"], required=True)
     parser.add_argument('--output', type=str, required=True)
     parser.add_argument('--gpu-id', type=int, default=0)
     parser.add_argument('--batch-size', type=int, default=1)
@@ -113,6 +114,12 @@ def main(args=None):
         from basicsr.archs.rrdbnet_arch import RRDBNet
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
         model.load_state_dict(torch.load(weights_fpath, map_location=device)['generator_weights'])
+        scale_factor = None
+    
+    elif model_name == "ShuffleMixer":
+        from prettier.models.shufflemixer import ShuffleMixer
+        model = ShuffleMixer(n_feats=64, kernel_size=7, n_blocks=5, mlp_ratio=2, upscaling_factor=4)
+        model.load_state_dict(torch.load(weights_fpath, map_location=device)['model_weights'])
         scale_factor = None
         
     else:
