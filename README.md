@@ -20,10 +20,12 @@ See full list in [`requirements.txt`](requirements.txt)
 
 ## Fine-tuned Models
 
-| Model | Info | Fine-tuned weights |
-| --- | ----------- | ---|
-| RealESRGAN | [Paper](https://arxiv.org/abs/2107.10833), [Repository](https://github.com/xinntao/Real-ESRGAN) | [`RealESRGAN_finetuned.pth`](https://drive.google.com/file/d/15xWVa7C4IISiMlXIdee2yjjZne2dufJh/view?usp=drive_link) |
-| EDSR | [Paper](https://arxiv.org/abs/1707.02921), [Repository](https://github.com/sanghyun-son/EDSR-PyTorch/) | [`EDSR_finetuned.pth`](https://drive.google.com/file/d/13E-EKIdHW6QyrZiLE8WvvDcJ1vnP9RgS/view?usp=drive_link) |
+| Model | Info | Fine-tuned weights | # parameters | # FLOP |
+| --- | ----------- | --- | ---: | ---: |
+| RealESRGAN (generator) | [Paper](https://arxiv.org/abs/2107.10833), [Repository](https://github.com/xinntao/Real-ESRGAN) | [`RealESRGAN_finetuned.pth`](https://drive.google.com/file/d/15xWVa7C4IISiMlXIdee2yjjZne2dufJh/view?usp=drive_link) | 16697987 | 55.11B |
+| EDSR | [Paper](https://arxiv.org/abs/1707.02921), [Repository](https://github.com/sanghyun-son/EDSR-PyTorch/) | [`EDSR_finetuned.pth`](https://drive.google.com/file/d/13E-EKIdHW6QyrZiLE8WvvDcJ1vnP9RgS/view?usp=drive_link) | 43089947 | 154.82B
+
+*FLOP (floating point operations) are estimated for a reference input patch of 96 x 16 pixels with 3 channels.
 
 ## Usage
 
