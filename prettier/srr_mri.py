@@ -100,7 +100,8 @@ def reconstruct_volume(
     if scaling_check.is_integer():
         LR_scaling = np.array([1, 1, scaling_check])
     else:
-        LR_scaling = np.round(LR_voxelsize)
+        #LR_scaling = np.round(LR_voxelsize)
+        LR_scaling = np.round(np.array([1, 1, LR_voxelsize[2]]))
     HR_shape = (np.array(LR_nib_img.shape)*LR_scaling).astype(int)
     if print_info:
         print("-------------------------------------------")
