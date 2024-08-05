@@ -1,9 +1,10 @@
 # PRETTIER
 
+### Perceptual super-resolution in multiple sclerosis MRI
+Check our [pre-print](https://www.medrxiv.org/content/10.1101/2024.08.02.24311394v1)!
+
 This repository contains the script to apply PRETTIER, a framework to perform super-resolution on structural MRI. This framework relies on convolutional neural networks (CNN) that have been fine-tune with data from T2-W FLAIR and T1-W MRIs of people with Multiple Sclerosis.  
 We have developed and evaluated PRETTIER to increase the through-plane resolution of multi-slice MRI from 6mm to 1mm.
-
-At this moment (May 2024), there are two fine-tuned CNN models to work within PRETTIER: EDSR and RealESRGAN.
 
 <img src="figures/example_simulatedLR.png?raw=True" width="800px" style="margin:0px 0px"/>
 
@@ -18,19 +19,23 @@ This code depends on:
 
 See full list in [`requirements.txt`](requirements.txt)
 
-## Fine-tuned Models
+## List of fine-tuned models
 
 | Model | Info | Fine-tuned weights | # parameters | # FLOP |
 | --- | ----------- | --- | ---: | ---: |
+| EDSR | [Paper](https://arxiv.org/abs/1707.02921), [Repository](https://github.com/sanghyun-son/EDSR-PyTorch/) | [`EDSR_finetuned.pth`](https://drive.google.com/file/d/13E-EKIdHW6QyrZiLE8WvvDcJ1vnP9RgS/view?usp=drive_link) | 43089947 | 154.82B |
 | RealESRGAN (generator) | [Paper](https://arxiv.org/abs/2107.10833), [Repository](https://github.com/xinntao/Real-ESRGAN) | [`RealESRGAN_finetuned.pth`](https://drive.google.com/file/d/15xWVa7C4IISiMlXIdee2yjjZne2dufJh/view?usp=drive_link) | 16697987 | 55.11B |
-| EDSR | [Paper](https://arxiv.org/abs/1707.02921), [Repository](https://github.com/sanghyun-son/EDSR-PyTorch/) | [`EDSR_finetuned.pth`](https://drive.google.com/file/d/13E-EKIdHW6QyrZiLE8WvvDcJ1vnP9RgS/view?usp=drive_link) | 43089947 | 154.82B
+| ShuffleMixer | [Paper](https://arxiv.org/abs/2205.15175), [Repository](https://github.com/sunny2109/ShuffleMixer) | [`ShuffleMixer_finetuned.pth`](https://drive.google.com/file/d/1sg2P2SNIW-efGflzYCHlWcRUuzjsSYTd/view?usp=drive_link) | 410579 | 1.49B
+
 
 *FLOP (floating point operations) are estimated for a reference input patch of 96 x 16 pixels with 3 channels.
+
+EDSR showed better results than RealESRGAN in our [paper](https://www.medrxiv.org/content/10.1101/2024.08.02.24311394v1). We have recently included the fine-tuned ShuffleMixer model, which is more compact and efficient while achieving quantitative results comparable to RealESRGAN.
 
 ## Usage
 
 ```
-./prettier_mri.py --LR-input <lr_input> --model-name {EDSR,RealESRGAN} --output <output_image> [--gpu-id GPU_ID] [--batch-size BATCH_SIZE] [--no-flip-axes]
+./prettier_mri.py --LR-input <lr_input> --model-name {EDSR,RealESRGAN,ShuffleMixer} --output <output_image> [--gpu-id GPU_ID] [--batch-size BATCH_SIZE] [--no-flip-axes]
 ```
 
 Example:
@@ -38,9 +43,25 @@ Example:
 ./prettier_mri.py --LR-input demo_data/synth_LR_T1.nii.gz --model-name EDSR --output demo_data/prettier_edsr_synth_T1.nii.gz
 ```
 
-## Citations
+## Citation
 
-Not yet.
+If you use PRETTIER in your research, please cite:
+
+```
+@misc{Giraldo2024prettier,
+    author = {Giraldo, Diana L. and Khan, Hamza and Pineda, Gustavo and Liang, Zhihua and Lozano Castillo, Alfonso and Van Wijmeersch, Bart and Woodruff, Henry and Lambin, Philippe and Romero, Eduardo and Peeters, Liesbet M. and Sijbers, Jan},
+    title = {Perceptual super-resolution in multiple sclerosis MRI},
+    elocation-id = {2024.08.02.24311394},
+    year = {2024},
+    month = {august}
+    doi = {10.1101/2024.08.02.24311394},
+    url = {https://www.medrxiv.org/content/early/2024/08/03/2024.08.02.24311394}
+}
+```
+
+## Funding
+
+This project received funding from the Flemish Government under the [“Flanders AI Research Program"](https://www.flandersairesearch.be/en).
 
 ## Contact
 
