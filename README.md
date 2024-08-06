@@ -35,12 +35,12 @@ EDSR showed better results than RealESRGAN in our [paper](https://www.medrxiv.or
 ## Usage
 
 ```
-./prettier_mri.py --LR-input <lr_input> --model-name {EDSR,RealESRGAN,ShuffleMixer} --output <output_image> [--gpu-id GPU_ID] [--batch-size BATCH_SIZE] [--no-flip-axes]
+./prettier_mri.py --input <lr_input> --model-name {EDSR,RealESRGAN,ShuffleMixer} --output <output_image> [--gpu-id GPU_ID] [--batch-size BATCH_SIZE] [--no-flip-axes]
 ```
 
 Example:
 ```
-./prettier_mri.py --LR-input demo_data/synth_LR_T1.nii.gz --model-name EDSR --output demo_data/prettier_edsr_synth_T1.nii.gz
+./prettier_mri.py --input demo_data/synth_LR_T1.nii.gz --model-name EDSR --output demo_data/prettier_edsr_synth_T1.nii.gz
 ```
 
 ## Citation
