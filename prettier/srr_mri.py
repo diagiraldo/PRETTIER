@@ -141,23 +141,24 @@ def reconstruct_volume(
 
         rec_list.append(recvol)
         
-    if return_vol_list:
-        return rec_list, HR_v2w
-    
-    else:       
-        # Combine volumes
-        if print_info:
-            print("-------------------------------------------")
-            print("Combining volumes")
-            
-        HR_data = combine_volumes(
-            rec_list, 
-            method = combine_vol_method, 
-            fba_p = fba_p, 
-            fba_sigma = fba_sigma,
-        )  
+          
+    # Combine volumes
+    if print_info:
+        print("-------------------------------------------")
+        print("Combining volumes")
         
-        t1 = time()
-        if print_info: print("Total reconstruction time:", t1 - t0)
+    HR_data = combine_volumes(
+        rec_list, 
+        method = combine_vol_method, 
+        fba_p = fba_p, 
+        fba_sigma = fba_sigma,
+    )  
+    
+    t1 = time()
+    if print_info: print("Total reconstruction time:", t1 - t0)
 
+    if return_vol_list:
+        return HR_data, HR_v2w, rec_list
+    
+    else: 
         return HR_data, HR_v2w
