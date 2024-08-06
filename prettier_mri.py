@@ -4,6 +4,7 @@
 # Last update: April 2024
 
 import os, sys
+from pathlib import Path
 import argparse
 import torch
 
@@ -30,12 +31,16 @@ def main(args=None):
     
     # Get inputs
     parser = argparse.ArgumentParser()
-    parser.add_argument('--LR-input', type=str, required=True)
-    parser.add_argument('--model-name', type=str, choices=["EDSR", "RealESRGAN", "ShuffleMixer"], required=True)
-    parser.add_argument('--output', type=str, required=True)
+    parser.add_argument('-i', '--input', type=str, required=True, 
+    help = 'input image')
+    parser.add_argument('-o', '--output', type=str, required=True, 
+    help = 'output image')
+    parser.add_argument('-m', '--model-name', type=str, choices=["EDSR", "RealESRGAN", "ShuffleMixer"], required=True, 
+    help = 'select fine-tuned model')
     parser.add_argument('--gpu-id', type=int, default=0)
     parser.add_argument('--batch-size', type=int, default=1)
     parser.add_argument('--no-flip-axes', action='store_true', default=False)
+    parser.add_argument('--intermediate-volumes', action='store_true', default=False)
     parser.add_argument('--quiet', action='store_true', default=False)
     
     args = parser.parse_args(args if args is not None else sys.argv[1:])
@@ -45,7 +50,7 @@ def main(args=None):
     if print_info: print('-------------------------------------------------')
     
     # Check inputs
-    if not os.path.isfile(args.LR_input):
+    if not os.path.isfile(args.input):
         raise ValueError('Input image does not exist.')
         
     # if not os.path.isdir(os.path.dirname(args.output)):
@@ -80,10 +85,10 @@ def main(args=None):
     if print_info: print('-------------------------------------------------')
         
     # Read input image
-    LR = nib.load(args.LR_input)
+    LR = nib.load(args.input)
     
     if print_info: 
-        print("LR image:", args.LR_input)
+        print("LR image:", args.input)
         print('Image array shape:', LR.header['dim'][1:4])
         print('Voxel size:', LR.header['pixdim'][1:4])
         print('Orientation of voxel axes:', nib.aff2axcodes(LR.affine))
@@ -129,7 +134,7 @@ def main(args=None):
     model = model.to(device)
     
     # Reconstruct volume
-    rec, v2w = reconstruct_volume(
+    rec, v2w, *vols = reconstruct_volume(
         LR, 
         model, 
         device,
@@ -137,12 +142,15 @@ def main(args=None):
         scale_factor = scale_factor,
         slices_as_channels = True,
         select_middle = False,
-        return_vol_list = False,
+        return_vol_list = args.intermediate_volumes,
         combine_vol_method = COMBINE_VOL_METHOD,
         print_info = print_info,
     )
     
     hr_nib = nib.Nifti1Image(rec, v2w)
+
+    if args.intermediate_volumes:
+        rec_nibs = [nib.Nifti1Image(vol, v2w) for vol in vols[0]]
     
     # Flip back axes
     if flip_axes:
@@ -150,11 +158,21 @@ def main(args=None):
         if print_info: print("Flipping axes of HR output")
         hr_nib = hr_nib.as_reoriented(flipping)
         #if print_info: print('New orientation of voxel axes:', nib.aff2axcodes(hr_nib.affine))
+        if args.intermediate_volumes:
+            rec_nibs = [vol_nib.as_reoriented(flipping) for vol_nib in rec_nibs] 
             
     # Save nifti image
     nib.save(hr_nib, args.output) 
-    
     if print_info: print("Reconstructed image saved in", args.output)
+
+    if args.intermediate_volumes:
+        suff = ''.join(Path(args.output).suffixes)
+        stem = args.output.rstrip(suff)
+        for i, vol_nib in enumerate(rec_nibs):
+            tmp_out = stem + '_vol' + str(i) + suff
+            nib.save(vol_nib, tmp_out) 
+            if print_info: print("Intermediate volume saved in", tmp_out)
+
 
 if __name__ == '__main__':
     main()
