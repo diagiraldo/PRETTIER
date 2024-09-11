@@ -1,7 +1,9 @@
-# PRETTIER
+# PRETTIER MRI
 
 ### Perceptual super-resolution in multiple sclerosis MRI
-Check our [pre-print](https://www.medrxiv.org/content/10.1101/2024.08.02.24311394v1)!
+
+Our paper has been accepted for publication in Frontiers in Neuroscience. 
+Check out the [pre-print](https://www.medrxiv.org/content/10.1101/2024.08.02.24311394v1) version!
 
 This repository contains the script to apply PRETTIER, a framework to perform super-resolution on structural MRI. This framework relies on convolutional neural networks (CNN) that have been fine-tune with data from T2-W FLAIR and T1-W MRIs of people with Multiple Sclerosis.  
 We have developed and evaluated PRETTIER to increase the through-plane resolution of multi-slice MRI from 6mm to 1mm.
