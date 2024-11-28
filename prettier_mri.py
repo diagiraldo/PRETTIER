@@ -47,7 +47,12 @@ def main(args=None):
     model_name = args.model_name
     print_info = not args.quiet
     
-    if print_info: print('-------------------------------------------------')
+    if print_info: 
+        print('-------------------------------------------------')
+        print('If you use PRETTIER MRI, please cite:')
+        print('Giraldo, et al. (2024). Perceptual super-resolution in multiple sclerosis MRI.')
+        print('Frontiers in Neuroscience (Vol. 18). https://doi.org/10.3389/fnins.2024.1473132')
+        print('-------------------------------------------------')
     
     # Check inputs
     if not os.path.isfile(args.input):

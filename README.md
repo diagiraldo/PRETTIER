@@ -2,8 +2,7 @@
 
 ### Perceptual super-resolution in multiple sclerosis MRI
 
-Our paper has been accepted for publication in Frontiers in Neuroscience. 
-Check out the [pre-print](https://www.medrxiv.org/content/10.1101/2024.08.02.24311394v1) version!
+Our paper has been [published in Frontiers in Neuroscience](https://doi.org/10.3389/fnins.2024.1473132), you can also check out the [pre-print](https://www.medrxiv.org/content/10.1101/2024.08.02.24311394v1) version.
 
 This repository contains the script to apply PRETTIER, a framework to perform super-resolution on structural MRI. This framework relies on convolutional neural networks (CNN) that have been fine-tune with data from T2-W FLAIR and T1-W MRIs of people with Multiple Sclerosis.  
 We have developed and evaluated PRETTIER to increase the through-plane resolution of multi-slice MRI from 6mm to 1mm.
@@ -50,14 +49,15 @@ Example:
 If you use PRETTIER in your research, please cite:
 
 ```
-@misc{Giraldo2024prettier,
-    author = {Giraldo, Diana L. and Khan, Hamza and Pineda, Gustavo and Liang, Zhihua and Lozano Castillo, Alfonso and Van Wijmeersch, Bart and Woodruff, Henry and Lambin, Philippe and Romero, Eduardo and Peeters, Liesbet M. and Sijbers, Jan},
+@article{Giraldo2024prettier,
+    author = {Giraldo, Diana L. and Khan, Hamza and Pineda, Gustavo and Liang, Zhihua and Lozano-Castillo, Alfonso and Van Wijmeersch, Bart and Woodruff, Henry C.  and Lambin, Philippe and Romero, Eduardo and Peeters, Liesbet M. and Sijbers, Jan},
     title = {Perceptual super-resolution in multiple sclerosis MRI},
-    elocation-id = {2024.08.02.24311394},
+    journal = {Frontiers in Neuroscience},
+    volume = {18},
     year = {2024},
-    month = {august}
-    doi = {10.1101/2024.08.02.24311394},
-    url = {https://www.medrxiv.org/content/early/2024/08/03/2024.08.02.24311394}
+    doi = {10.3389/fnins.2024.1473132},
+    url = {https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2024.1473132},
+    issn = {1662-453X}
 }
 ```
 
