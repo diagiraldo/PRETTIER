@@ -2,9 +2,12 @@
 # May, 2023
 
 import torch
+import torch.nn as nn
 from torch.utils.data import DataLoader
 from torchvision.transforms.functional import resize
 from tqdm import tqdm
+
+INTERP_MODE = 'bicubic'
 
 def apply_model_dataset(
     model,
@@ -12,6 +15,7 @@ def apply_model_dataset(
     device,
     batch_size = 5,
     scale_factor = None,
+    interpolate_input = False,
     resize_model_output = False, 
     output_shape = None,
     show_progress = True,
@@ -33,6 +37,9 @@ def apply_model_dataset(
         with tqdm(data_loader, unit="batch", disable=(not show_progress)) as teval:
             for data in teval:
                 tmp_input = data.to(device)
+                if interpolate_input:
+                    tmp_input = nn.functional.interpolate(tmp_input, size = output_shape, mode = INTERP_MODE, align_corners = False)
+                    #tmp_input = resize(tmp_input, size = output_shape, antialias=True)
                 if scale_factor : tmp_input *= scale_factor
                 model_output = model(tmp_input)
                 if scale_factor : model_output /= scale_factor

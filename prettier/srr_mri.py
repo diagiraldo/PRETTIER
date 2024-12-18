@@ -1,6 +1,6 @@
 # Diana Giraldo
 # Aug 2023
-# Last update: April 2024
+# Last update: Dec 2024
 
 from time import time
 import numpy as np
@@ -8,10 +8,10 @@ import cv2
 
 from .utils.reconstruction import combine_volumes, pad_rgb_channels, combine_channels
 from .utils.image_slices import ImageSlices
+from .utils.affine_transform import adjust_affine_transform
 from .apply_models import apply_model_dataset
 
 DEFAULT_NUM_WORKERS = 2
-
 
 # Function to upsample slices of a volume
 def upsample_slices(
@@ -24,6 +24,7 @@ def upsample_slices(
     scale_factor = None,
     slices_as_channels = True,
     select_middle = True,
+    interpolate_lr = False,
     print_info = True,
     num_workers = DEFAULT_NUM_WORKERS,
 ):
@@ -50,7 +51,8 @@ def upsample_slices(
         device,
         batch_size = batch_size,
         scale_factor = scale_factor,
-        resize_model_output = True,
+        interpolate_input = interpolate_lr,
+        resize_model_output = not interpolate_lr,
         output_shape = hr_slc_shape,
         show_progress = print_info,
         num_workers = num_workers,
@@ -88,6 +90,7 @@ def reconstruct_volume(
     scale_factor = None,
     slices_as_channels = True,
     select_middle = False,
+    interpolate_lr = False,
     return_vol_list = False,
     combine_vol_method = "average",
     fba_p = None, fba_sigma = None,
@@ -111,10 +114,11 @@ def reconstruct_volume(
     
     # Get HR transform
     LR_v2w = LR_nib_img.affine.astype(np.float64)
-    hr_R = LR_v2w[:3, :3] @ np.linalg.inv(np.diag(LR_scaling).astype(np.float64))
-    hr_b = LR_v2w[:3, 3] - hr_R @ ((LR_scaling - 1) / 2.)
-    HR_v2w = np.block([[hr_R, hr_b.reshape(-1,1)],
-                       [np.zeros((1, 3)), 1.]]).astype(np.float64)
+    HR_v2w = adjust_affine_transform(LR_v2w, LR_scaling)
+    # hr_R = LR_v2w[:3, :3] @ np.linalg.inv(np.diag(LR_scaling).astype(np.float64))
+    # hr_b = LR_v2w[:3, 3] - hr_R @ ((LR_scaling - 1) / 2.)
+    # HR_v2w = np.block([[hr_R, hr_b.reshape(-1,1)],
+    #                    [np.zeros((1, 3)), 1.]]).astype(np.float64)
     
     rec_list = []
     t0 = time()
@@ -135,6 +139,7 @@ def reconstruct_volume(
             scale_factor = scale_factor,
             slices_as_channels = slices_as_channels,
             select_middle = select_middle,
+            interpolate_lr = interpolate_lr,
             print_info = print_info,
             num_workers = num_workers,
         )
