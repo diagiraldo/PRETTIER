@@ -142,7 +142,10 @@ def main(args=None):
             force_resample=True,
             copy_header=True,
         )  
-        LR = newLR         
+        LR = newLR   
+        if print_info: 
+            print('New shape:', LR.header['dim'][1:4])
+            print('New voxel size:', LR.header['pixdim'][1:4])   
 
     # Get trained models
     if print_info:     

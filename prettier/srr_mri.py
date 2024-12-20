@@ -12,6 +12,7 @@ from .utils.affine_transform import adjust_affine_transform
 from .apply_models import apply_model_dataset
 
 DEFAULT_NUM_WORKERS = 2
+SLC_COMB_WEIGHTS = np.array([0.25, 0.5, 0.25])
 
 # Function to upsample slices of a volume
 def upsample_slices(
@@ -23,7 +24,8 @@ def upsample_slices(
     batch_size = 10,
     scale_factor = None,
     slices_as_channels = True,
-    select_middle = True,
+    select_middle_channel = True,
+    combine_channels_weights = SLC_COMB_WEIGHTS,
     interpolate_lr = False,
     print_info = True,
     num_workers = DEFAULT_NUM_WORKERS,
@@ -70,10 +72,10 @@ def upsample_slices(
     if not slices_as_channels:
             out = [ cv2.cvtColor(np.transpose(slc, (1,2,0)), cv2.COLOR_BGR2GRAY) for slc in outarray ]
     else:
-        if select_middle:
+        if select_middle_channel:
             out = [ slc[1,:,:].squeeze() for slc in outarray ]
         else:
-            out = [ combine_channels(slc, weights = np.array([0.25, 0.5, 0.25])) for slc in outarray ]
+            out = [ combine_channels(slc, method = "average", weights = combine_channels_weights) for slc in outarray ]
 
     # Stack slices and recover intensity range
     recvol = np.stack(out, axis = slicing_dim) * lr_slices.IMG_scaleint_factor
@@ -89,7 +91,7 @@ def reconstruct_volume(
     batch_size = 10,
     scale_factor = None,
     slices_as_channels = True,
-    select_middle = False,
+    select_middle_channel = False,
     interpolate_lr = False,
     return_vol_list = False,
     combine_vol_method = "average",
@@ -115,11 +117,7 @@ def reconstruct_volume(
     # Get HR transform
     LR_v2w = LR_nib_img.affine.astype(np.float64)
     HR_v2w = adjust_affine_transform(LR_v2w, LR_scaling)
-    # hr_R = LR_v2w[:3, :3] @ np.linalg.inv(np.diag(LR_scaling).astype(np.float64))
-    # hr_b = LR_v2w[:3, 3] - hr_R @ ((LR_scaling - 1) / 2.)
-    # HR_v2w = np.block([[hr_R, hr_b.reshape(-1,1)],
-    #                    [np.zeros((1, 3)), 1.]]).astype(np.float64)
-    
+
     rec_list = []
     t0 = time()
     
@@ -138,7 +136,7 @@ def reconstruct_volume(
             batch_size = batch_size,
             scale_factor = scale_factor,
             slices_as_channels = slices_as_channels,
-            select_middle = select_middle,
+            select_middle_channel = select_middle_channel,
             interpolate_lr = interpolate_lr,
             print_info = print_info,
             num_workers = num_workers,
